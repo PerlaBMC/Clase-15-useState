@@ -4,11 +4,11 @@ const NavBar = () => {
   return (
     <nav
       className="navbar navbar-expand-lg bg-body-tertiary bg-dark"
-      data-bs-theme="dark"
+      data-bs-theme="white"
     >
       <div className="container">
-        <a className="navbar-brand" href="#">
-          Navbar
+        <a>
+        <img src="https://www.revelbrunch.com/img/Revel-Brunch-Logo.png"  width={100} height={85} />
         </a>
         <button
           className="navbar-toggler"
@@ -25,19 +25,14 @@ const NavBar = () => {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <NavLink className="nav-link active" to="/">
-                Home
+                BRUNCH Love
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/about">
-                About
+                Our Menu
               </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/products">
-                Products
-              </NavLink>
-            </li>
+            </li> 
             <li className="nav-item">
               <NavLink className="nav-link" to="/customers">
                 Customers
@@ -48,6 +43,11 @@ const NavBar = () => {
                 Use State
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/Ejercicio">
+               Ejercicio
+              </NavLink>
+            </li>
           </ul>
           <form className="d-flex" role="search">
             <input
@@ -56,7 +56,7 @@ const NavBar = () => {
               placeholder="Search"
               aria-label="Search"
             />
-            <button className="btn btn-outline-success" type="submit">
+            <button className="btn btn-outline-secondary" type="submit">
               Search
             </button>
           </form>
