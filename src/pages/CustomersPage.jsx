@@ -1,112 +1,106 @@
-import axios from "axios";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect, cloneElement } from "react";
+import { db } from "../firebase/firebase";
+import { addDoc, collection, doc, getDocs,  updateDoc } from "firebase/firestore";
+import { useParams } from "react-router-dom";
+
+const formInitialState = {
+  name: "",
+  lastName: "",
+  email: "",
+  telefono: "",
+  fecha: "",
+  hora: "",
+};
 
 const CustomersPage = () => {
-  const [clientes, setClientes] = useState([]);
+const [form, setForm] = useState(formInitialState)
+const [users, setUsers] = useState ([]);
 
-  const handleCustomers = async () => {
-    const resp = await axios.get(
-      "https://ucamp-api.onrender.com/api/v1/customers"
-    );
-    console.log(resp.data.data);
-    setClientes(resp.data.data);
-  };
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    //console.log (form);
+    await crearUsuario ();
+
+    setForm (formInitialState);
+ 
+  }
+
+  const crearUsuario = async () => {
+    const collectionUsuarios = collection (db, "usuarios");
+    await addDoc (collectionUsuarios, form);
+    await obtenerUsuario ();
+  }
+
+  const obtenerUsuario = async () => {
+    const collectionUsuarios = collection (db, "usuarios");
+    const resp = await getDocs (collectionUsuarios, form);
+    const usuarios = resp.docs.map ((usuario) => ({
+      id: usuario.id,
+      ...usuario.data (),
+    })); 
+
+setUsers (users)
+  }
+
+  const handleChange= (e) => {
+    setForm ({
+      ...form, 
+      [e.target.name] : e.target.value,
+    });
+  }
+
+useEffect (() => {
+obtenerUsuario ()
+  }, [])
+
+
+ 
 
   return (
     <>
-      <main className="row">
-        <article className="col">
-          <h2>CustomersPage</h2>
-        </article>
-      </main>
-      <section className="row">
-        <article className="col">
-          <button className="btn btn-info" onClick={handleCustomers}>
-            Obtener clientes
-          </button>
-        </article>
-      </section>
-      <section className="row">
-        <article className="col">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientes.map((cliente) => (
-                <tr key={cliente.id}>
-                  <th scope="row">{cliente.id}</th>
-                  <td>{cliente.firstName}</td>
-                  <td>{cliente.lastName}</td>
-                  <td>
-                    <NavLink
-                      className="btn btn-primary"
-                      to={`/customers/${cliente.id}`}
-                    >
-                      Ver mas
-                    </NavLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </article>
-      </section>
 
 <div className="card text-bg-dark">
-  <img src="https://vocesescritas.com.mx/contenitdo/upoloads/2021/11/Rosa-Negra-Satelite.jpg" className="card-img" alt="..." />
+  <img src="https://vocesescritas.com.mx/contenitdo/upoloads/2021/11/Rosa-Negra-Satelite.jpg" className="card-img" alt="fondo" />
   <div className="card-img-overlay">
-<form className="row g-3 needs-validation" noValidate>
+<form onSubmit={handleSubmit} className="row g-3 needs-validation" noValidate>
   <div className="col-md-4">
-    <label htmlFor="validationCustom01" className="form-label">First name</label>
-    <input type="text" className="form-control" id="validationCustom01" defaultValue="Mark" required />
+    <label htmlFor="name" className="form-label">First name</label>
+    <input type="text" className="form-control" id="name" autoComplete="off" name="name" value={form.name} onChange={handleChange}/>
+  </div>
+  <div className="col-md-4">
+    <label htmlFor="lastName" className="form-label">Last name</label>
+    <input type="text" className="form-control" id="lastName" autoComplete="off" name="lastName" value={form.lastName} onChange={handleChange} />
     <div className="valid-feedback">
       Looks good!
     </div>
   </div>
   <div className="col-md-4">
-    <label htmlFor="validationCustom02" className="form-label">Last name</label>
-    <input type="text" className="form-control" id="validationCustom02" defaultValue="Otto" required />
-    <div className="valid-feedback">
-      Looks good!
-    </div>
-  </div>
-  <div className="col-md-4">
-    <label htmlFor="validationCustomUsername" className="form-label">Username</label>
+    <label htmlFor="validationCustomUsername" className="form-label">Email</label>
     <div className="input-group has-validation">
-      <span className="input-group-text" id="inputGroupPrepend">@</span>
-      <input type="text" className="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required />
+      <span className="email" id="inputGroupPrepend">@</span>
+      <input type="text" className="form-control" id="email" autoComplete="off" name="email" value={form.email} onChange={handleChange} />
       <div className="invalid-feedback">
         Please choose a username.
       </div>
     </div>
   </div>
   <div className="col-md-6">
-    <label htmlFor="validationCustom03" className="form-label">City</label>
-    <input type="text" className="form-control" id="validationCustom03" required />
+    <label htmlFor="telefono" className="form-label">Teléfono</label>
+    <input type="number" className="form-control" id="telefono" autoComplete="off" name="telefono" value={form.telefono} onChange={handleChange}/>
     <div className="invalid-feedback">
       Please provide a valid city.
     </div>
   </div>
   <div className="col-md-3">
-    <label htmlFor="validationCustom04" className="form-label">State</label>
-    <select className="form-select" id="validationCustom04" required>
-      <option selected disabled value>Choose...</option>
-      <option>...</option>
-    </select>
+    <label htmlFor="fecha" className="form-label">Fecha de reservación</label>
+    <input type="text" className="form-control" id="fecha" autoComplete="off" name="fecha" value={form.fecha} onChange={handleChange}/>
     <div className="invalid-feedback">
       Please select a valid state.
     </div>
   </div>
   <div className="col-md-3">
-    <label htmlFor="validationCustom05" className="form-label">Zip</label>
-    <input type="text" className="form-control" id="validationCustom05" required />
+    <label htmlFor="hora" className="form-label">Hora</label>
+    <input type="number" className="form-control" id="hora" autoComplete="off" name="hora" value={form.hora} onChange={handleChange}/>
     <div className="invalid-feedback">
       Please provide a valid zip.
     </div>
@@ -125,12 +119,9 @@ const CustomersPage = () => {
   <div className="col-12">
     <button className="btn btn-primary" type="submit">Submit form</button>
   </div>
-</form>
-
-  </div>
+</form> <br />
 </div>
-
-
+</div>
     </>
   );
 };
