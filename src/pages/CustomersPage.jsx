@@ -1,6 +1,6 @@
 import { useState, useEffect, cloneElement } from "react";
 import { db } from "../firebase/firebase";
-import { addDoc, collection, doc, getDocs,  updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs,  updateDoc, deleteDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 
 const formInitialState = {
@@ -31,15 +31,21 @@ const [users, setUsers] = useState ([]);
     await obtenerUsuario ();
   }
 
+  const eliminarUsuario = async (id) => {
+    const registro = doc(db, "usuarios", id);
+    await deleteDoc (registro); 
+    await obtenerUsuario ();
+  }
+
   const obtenerUsuario = async () => {
     const collectionUsuarios = collection (db, "usuarios");
     const resp = await getDocs (collectionUsuarios, form);
     const usuarios = resp.docs.map ((usuario) => ({
       id: usuario.id,
-      ...usuario.data (),
+      ...usuario.data(),
     })); 
 
-setUsers (users)
+setUsers (usuarios)
   }
 
   const handleChange= (e) => {
@@ -120,6 +126,27 @@ obtenerUsuario ()
     <button className="btn btn-primary" type="submit">Submit form</button>
   </div>
 </form> <br />
+
+<div className="row row-cols-1 row-cols-md-3 g-4">
+        {users.map((usuario) => (
+          <div key={usuario.id} className="col">
+            <div className="card h-100">
+            <img src="https://www.revelbrunch.com/img/Revel-Brunch-Logo.png"  width={90} height={50} />              <div className="card-body">
+                <h5 className="card-title">{usuario.name} {usuario.lastName} </h5>
+                <p className="card-text">Direccion email: {usuario.email}, número telefóncio: {usuario.telefono}, fecha {usuario.fecha} y hora de reserva {usuario.hora} hrs</p>
+                <button
+                  type="buttton"
+                  className="btn btn-danger"
+                  onClick={() => eliminarUsuario(usuario.id)}
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
 </div>
 </div>
     </>
