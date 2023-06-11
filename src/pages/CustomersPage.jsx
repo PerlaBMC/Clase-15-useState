@@ -46,6 +46,8 @@ const [users, setUsers] = useState ([]);
     })); 
 
 setUsers (usuarios)
+const autor = import.meta.env.VITE_NAME
+console.log (autor)
   }
 
   const handleChange= (e) => {
@@ -123,7 +125,7 @@ obtenerUsuario ()
     </div>
   </div>
   <div className="col-12">
-    <button className="btn btn-primary" type="submit">Submit form</button>
+    <button className="btn btn-outline-light" type="submit">Submit form</button>
   </div>
 </form> <br />
 
@@ -133,7 +135,7 @@ obtenerUsuario ()
             <div className="card h-100">
             <img src="https://www.revelbrunch.com/img/Revel-Brunch-Logo.png"  width={90} height={50} />              <div className="card-body">
                 <h5 className="card-title">{usuario.name} {usuario.lastName} </h5>
-                <p className="card-text">Direccion email: {usuario.email}, número telefóncio: {usuario.telefono}, fecha {usuario.fecha} y hora de reserva {usuario.hora} hrs</p>
+                <p className="card-text">Dirección email: {usuario.email}, número telefóncio: {usuario.telefono}, fecha {usuario.fecha} y hora de reserva {usuario.hora} hrs</p>
                 <button
                   type="buttton"
                   className="btn btn-danger"
