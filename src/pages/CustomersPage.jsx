@@ -1,7 +1,8 @@
-import { useState, useEffect, cloneElement } from "react";
+import { useState, useEffect} from "react";
 import { db } from "../firebase/firebase";
 import { addDoc, collection, doc, getDocs,  updateDoc, deleteDoc } from "firebase/firestore";
-import { useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
 
 const formInitialState = {
   name: "",
@@ -18,7 +19,6 @@ const [users, setUsers] = useState ([]);
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    //console.log (form);
     await crearUsuario ();
 
     setForm (formInitialState);
@@ -49,6 +49,7 @@ setUsers (usuarios)
 const autor = import.meta.env.VITE_NAME
 console.log (autor)
   }
+
 
   const handleChange= (e) => {
     setForm ({
@@ -133,17 +134,26 @@ obtenerUsuario ()
         {users.map((usuario) => (
           <div key={usuario.id} className="col">
             <div className="card h-100">
-            <img src="https://www.revelbrunch.com/img/Revel-Brunch-Logo.png"  width={90} height={50} />              <div className="card-body">
+            <img src="https://www.revelbrunch.com/img/Revel-Brunch-Logo.png"  width={90} height={50} />             
+             <div className="card-body">
                 <h5 className="card-title">{usuario.name} {usuario.lastName} </h5>
                 <p className="card-text">Dirección email: {usuario.email}, número telefóncio: {usuario.telefono}, fecha {usuario.fecha} y hora de reserva {usuario.hora} hrs</p>
+                           
+               <NavLink
+                  type="button"
+                  className="btn btn-outline-warning"
+                  to = {`/customer${usuario.id}`} >
+                  Editar
+                </NavLink> 
+               
                 <button
                   type="buttton"
-                  className="btn btn-danger"
+                  className="btn btn-outline-danger"
                   onClick={() => eliminarUsuario(usuario.id)}
                 >
                   Eliminar
                 </button>
-              </div>
+               </div>
             </div>
           </div>
         ))}

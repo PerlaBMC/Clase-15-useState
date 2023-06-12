@@ -10,9 +10,8 @@ import NavBar from "../components/NavBar";
 import HomePage from "../pages/HomePage";
 import AboutPage from "../pages/AboutPage";
 import CustomersPage from "../pages/CustomersPage";
-import UseStatePage from "../pages/UseStatePage";
-import EjercicioPage from "../pages/EjercicioPage";
 import Footer from "../components/Footer";
+import CustomerPage from "../pages/CustomerPage";
 
 const AppRouter = () => {
   return (
@@ -25,14 +24,13 @@ const AppRouter = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/customers" element={<CustomersPage />} />
-            <Route path="/use-state" element={<UseStatePage />} />
-            <Route path="/Ejercicio" element={<EjercicioPage />} />
+            <Route path="/customer" element={<CustomerPage />} />
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
         </div>
+        <Footer/>
       </Router>
-      <Footer/>
-    </>
+      </>
   );
 };
 
